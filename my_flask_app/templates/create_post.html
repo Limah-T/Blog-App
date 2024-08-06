@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block main %}
+<header
+  class="masthead"
+  style="background-image: url('../static/assets/img/edit-bg.jpg')">
+  <div class="container position-relative px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+        <div class="site-heading">
+          {% if is_edit %}
+            <h1>Edit Post</h1>
+          {% else %}
+            <h1>New Blog Post</h1>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+<main class="mb-4">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <!-- Rendering the form here -->
+        <p>Optional: <em style="color: blue">You can use any of these urls/link below 👎 as the img_url input</em></p>
+        <p>https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRak8RXemXTtyrQG
+          -bpzcbV0_U4zJSnc-_q5g&s</p>
+        <p> https://cdn.pixabay.com/photo/2014/08/30/17/23/sunset-431675_640.jpg</p>
+        <p>https://t4.ftcdn.net/jpg/05/61/58/95/360_F_561589513_OHjsXT6WPugfbzDYURgWo8rSncpgmdqm.jpg</p>
+        <form method="POST"
+          action="{% if is_edit and post_id %}{{ url_for('views.edit_post',
+           post_id=post_id) }}{% else %}{{ url_for('views.add_new_post') }}{% endif %}">
+          {% from 'bootstrap5/form.html' import render_form %}
+          {{ render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+        </form>
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}

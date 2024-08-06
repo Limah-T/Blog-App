@@ -1,0 +1,11 @@
+[33mcommit 2f40128b25782f4fcdb5b38992e6efc10fc43c0a[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m)[m
+Author: Limah.T <limahtechnology@yahoo.com>
+Date:   Sat Aug 3 21:11:34 2024 +0100
+
+    Update .gitignore
+
+[33mcommit ad2b245638b3643f7cad17f317bb80955f822d54[m
+Author: Limah.T <limahtechnology@yahoo.com>
+Date:   Sat Aug 3 20:46:58 2024 +0100
+
+    Initial commit of blog app project with basic structure and setup

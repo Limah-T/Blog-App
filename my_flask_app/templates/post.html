@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}{{ post.title }}{% endblock %}
+<!-- Page Header-->
+{% block main%}
+<header class="masthead" style="background-image: url('{{post.img_url}}')">
+  <div class="container position-relative px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+        <div class="post-heading">
+          <h1>{{ post.title }}</h1>
+          <h2 class="subheading">{{ post.subtitle }}</h2>
+          <span class="meta"
+            >Posted by
+            <!-- Changed from post.author -->
+            <a href="#">{{ post.user.name }}</a>
+            on {{ post.date }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+<!-- Post Content -->
+<article>
+  {% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="{{ 'flash-success' if category == 'success' else 'flash-error' }}">
+          <span class="flash-icon">
+            {% if category == 'success' %}
+              ✔️
+            {% elif category == 'error' %}
+              ❌
+            {% endif %}
+          </span>
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+  {% if unauthorized_user %}
+     <div style="text-align: center">
+       <span>Click to <a href="{{ url_for('auth.login') }}" style="color:blue"><em><u>login</u></em></a> or
+       <a href="{{ url_for('auth.signup') }}" style="color:blue"><em><u>signup</u></em></a></span>
+     </div>
+  {% endif %}
+  <div class="container px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+        {{ post.content|safe }}
+        <!--Only show Edit Post button if user id is 1 (admin user) -->
+        {% if current_user.id == 1 or current_user.id == post.user.id %}
+          <div class="d-flex justify-content-end mb-4">
+            <a
+              class="btn btn-primary float-right"
+              href="{{url_for('views.edit_post', post_id=post.id)}}"
+              >Edit Post</a
+            >
+          </div>
+        {% endif %}
+
+        <!-- Comments Area -->
+        {% if all_comments %}
+            <p><em><a class="btn btn-link" data-bs-toggle="collapse" href="#comments-{{ post.id }}"
+                       role="button" aria-expanded="false" aria-controls="comments-{{ post.id }}">
+              <u>View ({{ all_comments|length }}) comments</u>
+            </a></em></p>
+
+            <div class="collapse" id="comments-{{ post.id }}">
+              <div class="comment">
+                <ul class="commentList">
+                  <!-- Show all comments -->
+                  {% for comment in all_comments %}
+                    <li>
+                      <div class="commentText">
+                        {{ comment.text|safe }}
+                        <span class="sub-text">{{ comment.comment_author.name}}</span>
+                      </div>
+                    </li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </div>
+        {% else %}
+            <p><em>No comment</em></p>
+        {% endif %}
+       {% from 'bootstrap5/form.html' import render_form %}
+       {{ render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+      </div>
+    </div>
+  </div>
+</article>
+{% endblock %}
+

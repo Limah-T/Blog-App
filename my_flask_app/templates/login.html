@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}Login{% endblock %}
+{% block main %}
+<header
+  class="masthead"
+  style="background-image: url('../static/assets/img/login-bg.jpg')">
+  <div class="container position-relative px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+        <div class="site-heading">
+          <h1>Login</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+<main class="mb-4">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        {% with messages = get_flashed_messages(with_categories=True) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="{{ 'flash-success' if category == 'success' else 'flash-error' }}">
+                <span class="flash-icon">
+                  {% if category == 'success' %}
+                    ✔️
+                  {% elif category == 'error' %}
+                    ❌
+                  {% endif %}
+                </span>
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+        <!--Rendering the logging form here-->
+        <form method="POST" action="{{ url_for('auth.login') }}">
+          {% from 'bootstrap5/form.html' import render_form %}
+          {{ render_form(form, novalidate=True, button_map={"submit": "secondary"}) }}
+        </form>
+        {% if invalid_email %}
+          <div style="text-align: center">
+            <span>Try to <a href="{{ url_for('auth.signup') }}" style="color:blue"><em><u>signup</u></em></a> instead</span>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}

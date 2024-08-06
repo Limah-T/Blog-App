@@ -73,8 +73,8 @@
                   {% for comment in all_comments %}
                     <li>
                       <div class="commentText">
-                        {{ comment.text|safe }}
                         <span class="sub-text">{{ comment.comment_author.name}}</span>
+                        {{ comment.text|safe }}
                       </div>
                     </li>
                   {% endfor %}

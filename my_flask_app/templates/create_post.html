@@ -22,11 +22,12 @@
     <div class="row">
       <div class="col-lg-8 col-md-10 mx-auto">
         <!-- Rendering the form here -->
-        <p>Optional: <em style="color: blue">You can use any of these urls/link below 👎 as the img_url input</em></p>
-        <p>https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRak8RXemXTtyrQG
+        <p>Optional: <em style="color: blue">You can use any of these links below 👎 as the img_url input</em></p>
+        <p style="color: green">https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRak8RXemXTtyrQG
           -bpzcbV0_U4zJSnc-_q5g&s</p>
-        <p> https://cdn.pixabay.com/photo/2014/08/30/17/23/sunset-431675_640.jpg</p>
-        <p>https://t4.ftcdn.net/jpg/05/61/58/95/360_F_561589513_OHjsXT6WPugfbzDYURgWo8rSncpgmdqm.jpg</p>
+        <p>https://img.freepik.com/free-vector/dark-gradient-background-with
+          -copy-space_53876-99548.jpg?size=626&ext=jpg&ga=GA1.1.2008272138.
+          1722902400&semt=ais_hybrid</p>
         <form method="POST"
           action="{% if is_edit and post_id %}{{ url_for('views.edit_post',
            post_id=post_id) }}{% else %}{{ url_for('views.add_new_post') }}{% endif %}">

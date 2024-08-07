@@ -63,7 +63,11 @@
         {% if all_comments %}
             <p><em><a class="btn btn-link" data-bs-toggle="collapse" href="#comments-{{ post.id }}"
                        role="button" aria-expanded="false" aria-controls="comments-{{ post.id }}">
-              <u>View ({{ all_comments|length }}) comments</u>
+              {% if all_comments|length > 1%}
+                <u>View ({{ all_comments|length }}) comments</u>
+              {% else %}
+                <u>View ({{ all_comments|length }}) comment</u>
+              {% endif %}
             </a></em></p>
 
             <div class="collapse" id="comments-{{ post.id }}">

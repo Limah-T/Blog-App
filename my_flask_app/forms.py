@@ -31,7 +31,7 @@ class BlogPostForm(FlaskForm):
     title = StringField(label="Blog Title", validators=[DataRequired()])
     subtitle = StringField(label="Subtitle", validators=[DataRequired()])
     img_url = TextAreaField(label="Image_URL", validators=[DataRequired()],
-                          render_kw={'placeholder': 'You can use any of the default urls listed above (copy and paste here) or '
+                          render_kw={'placeholder': 'Background image: You can use any of the default urls listed above (copy and paste here) or '
                                                     'copy image url of your choice in any website','rows': '2', 'cols': '30'})
     content = TextAreaField(label="Content", render_kw={'rows': 6, 'cols': 50},validators=[DataRequired()])
     submit = SubmitField(label="Post Blog")

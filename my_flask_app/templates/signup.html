@@ -1,9 +1,7 @@
 {% extends 'base.html' %}
 {% block title %}Signup{% endblock %}
 {% block main %}
-<header
-  class="masthead"
-  style="background-image: url('../static/assets/img/signup.jpg')">
+<header class="masthead" style="background-image: url('../static/assets/img/signup.jpg')">
   <div class="container position-relative px-4 px-lg-5">
     <div class="row gx-4 gx-lg-5 justify-content-center">
       <div class="col-md-10 col-lg-8 col-xl-7">
@@ -45,11 +43,50 @@
         {% endif %}
         <!--Rendering the registration form here-->
         <form method="POST" action="{{ url_for('auth.signup') }}">
-          {% from 'bootstrap5/form.html' import render_form %}
-          {{render_form(form, novalidate=True, button_map={"submit": "secondary"}) }}
+          {{ form.hidden_tag() }}
+          <div class="form-group">
+            {{ form.username.label(class="form-control-label") }}
+            {{ form.username(class="form-control") }}
+          </div>
+          <div class="form-group">
+            {{ form.email.label(class="form-control-label") }}
+            {{ form.email(class="form-control") }}
+          </div>
+          <div class="form-group">
+            {{ form.password.label(class="form-control-label") }}
+            <div style="position: relative;">
+              {{ form.password(class="form-control") }}
+              <span class="toggle-password" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;">
+                <i class="fas fa-eye"></i>
+              </span>
+            </div>
+          </div>
+          <div class="form-group">
+            {{ form.confirm_password.label(class="form-control-label") }}
+            <div style="position: relative;">
+              {{ form.confirm_password(class="form-control") }}
+              <span class="toggle-password" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;">
+                <i class="fas fa-eye"></i>
+              </span>
+            </div>
+          </div>
+          <hr>
+          <div class="form-group">
+            {{ form.signup(class="btn btn-primary") }}
+          </div>
         </form>
       </div>
     </div>
   </div>
+  <script>
+  document.querySelectorAll('.toggle-password').forEach(item => {
+    item.addEventListener('click', function (e) {
+      const passwordField = this.previousElementSibling;
+      const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordField.setAttribute('type', type);
+      this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+    });
+  });
+</script>
 </main>
 {% endblock %}

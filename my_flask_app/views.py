@@ -3,7 +3,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash
 from .forms import BlogPostForm, CommentForm, ContactForm
 from my_flask_app import db, mail
 from .auth import login_required
-from .models import BlogPost, Comment
+from .models import BlogPost, Comment, User
 from datetime import datetime
 from flask_login import current_user
 from flask_mail import Message

@@ -110,10 +110,12 @@ def edit_post(post_id):
     return render_template('create_post.html', form=form, is_edit=True, post_id=post_id)
 
 
-@views.route("/delete-comment")
-def delete_post():
-    comment_id = db.session.execute(db.select(Comment).where(Comment.id == 17)).scalar()
-    db.session.delete(comment_id)
-    db.session.commit()
-    print("comment deleted")
+@views.route("/delete-post/<int:post_id>")
+@login_required
+def delete_post(post_id):
+    post = db.get_or_404(BlogPost, post_id)
+    if post:
+        db.session.delete(post)
+        db.session.commit()
+        flash(message="Post deleted!", category="success")
     return redirect(url_for('views.home'))

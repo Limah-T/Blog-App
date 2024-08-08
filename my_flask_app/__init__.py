@@ -5,7 +5,6 @@ from sqlalchemy.orm import DeclarativeBase
 from flask_login import LoginManager
 from dotenv import load_dotenv
 from flask_mail import Mail
-from flask_migrate import Migrate
 import os
 
 load_dotenv()
@@ -17,7 +16,7 @@ class Base(DeclarativeBase):
 db = SQLAlchemy(model_class=Base)
 login_manager = LoginManager()
 mail = Mail()
-migrate = Migrate()
+
 
 
 def create_app():
@@ -35,7 +34,7 @@ def create_app():
     mail.init_app(app)
     Bootstrap5(app=app)
     db.init_app(app)
-    migrate.init_app(app, db)
+
     login_manager.init_app(app)
 
     with app.app_context():

@@ -17,7 +17,7 @@ views = Blueprint('views', __name__)
 @views.route("/")
 @views.route("/home")
 def home():
-    post_database = db.session.execute(db.select(BlogPost)).scalars().all()
+    post_database = db.session.execute(db.select(BlogPost).order_by(BlogPost.date.desc())).scalars().all()
     return render_template('home.html', all_posts=post_database)
 
 
@@ -62,7 +62,6 @@ def add_new_post():
         db.session.add(new_post)
         db.session.commit()
         flash(message="Post created", category="success")
-        # post = db.session.execute(db.select(BlogPost).where(BlogPost.id == new_post.id)).scalar()
         return redirect(url_for('views.show_post', post_id=new_post.id))
     return render_template("create_post.html", form=form, new_post=True)
 
@@ -78,44 +77,60 @@ def show_post(post_id):
         if not current_user.is_authenticated:
             flash(message="You have to login or signup to comment", category="error")
             return render_template("post.html", post=post, form=form, unauthorized_user=True)
-
+        print(f"Form Comment Data: post id: {post.id, post_id}")
+        print(f"text: {form.text.data}")
+        print(f"User: {current_user.id}")
         new_comment = Comment(text=form.text.data, post_id=post_id, author_id=current_user.id)
         db.session.add(new_comment)
         db.session.commit()
         return redirect(url_for('views.show_post', post_id=post.id))
-
     return render_template("post.html", post=post, form=form, all_comments=comment)
 
 
 @views.route("/edit-post/<int:post_id>", methods=['GET', 'POST'])
 @login_required
 def edit_post(post_id):
-    post = db.get_or_404(BlogPost, post_id)
-    form = BlogPostForm(
-        title=post.title,
-        subtitle=post.subtitle,
-        img_url=post.img_url,
-        content=post.content
-    )
+    try:
+        post = db.get_or_404(BlogPost, post_id)
+        if post.id == post.user.id:
+            pass
+    except:
+        flash(message="You are not permitted to edit this post")
+        return redirect(url_for('views.home'))
+    else:
+        form = BlogPostForm(
+            title=post.title,
+            subtitle=post.subtitle,
+            img_url=post.img_url,
+            content=post.content
+        )
 
-    if form.validate_on_submit():
-        post.title = form.title.data
-        post.subtitle = form.subtitle.data
-        post.img_url = form.img_url.data
-        post.content = form.content.data
-        db.session.commit()
-        flash(message="Post edited", category='success')
-        return redirect(url_for('views.show_post', post_id=post.id))
+        if form.validate_on_submit():
+            post.title = form.title.data
+            post.subtitle = form.subtitle.data
+            post.img_url = form.img_url.data
+            post.content = form.content.data
+            db.session.commit()
+            flash(message="Post edited", category='success')
+            return redirect(url_for('views.show_post', post_id=post.id))
 
     return render_template('create_post.html', form=form, is_edit=True, post_id=post_id)
 
 
-@views.route("/delete-post/<int:post_id>")
+@views.route("/delete-post/<int:post_id>", methods=['GET','POST'])
 @login_required
 def delete_post(post_id):
-    post = db.get_or_404(BlogPost, post_id)
-    if post:
+    try:
+        post = db.session.execute(db.select(BlogPost).where(BlogPost.id == post_id)).scalar_one()
+        if post.id == post.user.id:
+            pass
+    except:
+        flash(message="You are not permitted to delete this post")
+        return redirect(url_for('views.home'))
+    else:
         db.session.delete(post)
         db.session.commit()
         flash(message="Post deleted!", category="success")
-    return redirect(url_for('views.home'))
+        return redirect(url_for('views.home'))
+
+

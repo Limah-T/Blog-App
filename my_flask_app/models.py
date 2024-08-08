@@ -10,25 +10,24 @@ class User(UserMixin, db.Model):
     name: Mapped[str] = mapped_column(String(100), nullable=False, unique=True)
     email: Mapped[str] = mapped_column(String(200), nullable=False, unique=True)
     password: Mapped[str] = mapped_column(String(200), nullable=False)
-    # profile_pic: Mapped[str] = mapped_column(String(200))
-    avatar_url: Mapped[str] = mapped_column(String(255), nullable=True)
-    posts: Mapped[list['BlogPost']] = relationship('BlogPost', back_populates="user")
-    comment: Mapped[list['Comment']] = relationship('Comment', back_populates="comment_author")
-    like: Mapped[list['Likes']] = relationship('Likes', back_populates="user_like")
+    profile_pic: Mapped[str] = mapped_column(String(255), nullable=True)
+    posts = relationship('BlogPost', back_populates="user", cascade="all, delete")
+    comments = relationship('Comment', back_populates="author", cascade="all, delete")
+    likes = relationship('Likes', back_populates="user", cascade="all, delete")
 
 
 class BlogPost(db.Model):
     __tablename__ = "posts"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
-    title: Mapped[str] = mapped_column(String(500), nullable=False, unique=True)
+    title: Mapped[str] = mapped_column(String(500), nullable=False)
     subtitle: Mapped[str] = mapped_column(String(1000), nullable=False)
     img_url: Mapped[str] = mapped_column(String(1000), nullable=False)
     content: Mapped[str] = mapped_column(Text, nullable=False)
     date: Mapped[str] = mapped_column(String(200), nullable=False)
-    user: Mapped[list['User']] = relationship('User', back_populates="posts")
-    comment: Mapped[list['Comment']] = relationship('Comment', back_populates="comment_post")
-    like: Mapped[list['Likes']] = relationship('Likes', back_populates="post_like")
+    user = relationship('User', back_populates="posts")
+    comments = relationship('Comment', back_populates="post", cascade="all, delete")
+    likes = relationship('Likes', back_populates="post", cascade="all, delete")
 
 
 class Comment(db.Model):
@@ -37,8 +36,9 @@ class Comment(db.Model):
     post_id: Mapped[int] = mapped_column(ForeignKey("posts.id"))
     author_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
     text: Mapped[str] = mapped_column(Text, nullable=False)
-    comment_author: Mapped[list['User']] = relationship('User', back_populates="comment")
-    comment_post: Mapped[list['BlogPost']] = relationship('BlogPost', back_populates="comment")
+    author = relationship('User', back_populates="comments")
+    post =  relationship('BlogPost', back_populates="comments", cascade="all, delete")
+    likes = relationship('Likes', back_populates="comments", cascade="all, delete")
 
 
 class Likes(db.Model):
@@ -46,5 +46,7 @@ class Likes(db.Model):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     post_id: Mapped[int] = mapped_column(ForeignKey("posts.id"))
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
-    post_like: Mapped[list['BlogPost']] = relationship('BlogPost', back_populates="like")
-    user_like: Mapped[list['User']] = relationship('User', back_populates="like")
+    comment_id: Mapped[int] = mapped_column(ForeignKey("comments.id"))
+    post = relationship('BlogPost', back_populates="likes", cascade="all, delete")
+    user = relationship('User', back_populates="likes", cascade="all, delete")
+    comments = relationship('Comment', back_populates="likes", cascade="all, delete")

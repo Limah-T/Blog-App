@@ -62,23 +62,9 @@ def signup():
         else:
             hashed_password = generate_password_hash(password=form.password.data, method="pbkdf2:sha256", salt_length=8)
             print(hashed_password)
-            default = "https://www.example.com/default.jpg"
-            size = 40
 
-            # Encode the email to lowercase and then to bytes
-            email_encoded = form.email.data.lower().encode('utf-8')
-
-            # Generate the SHA256 hash of the email
-            email_hash = hashlib.md5(email_encoded).hexdigest()
-
-            # Construct the URL with encoded query parameters
-            query_params = urlencode({'d': default, 's': str(size)})
-            gravatar_url = f"https://secure.gravatar.com/avatar/{email_hash}?{query_params}"
-
-            print(gravatar_url)
             new_user = User(
-                name = form.username.data.lower(), email=form.email.data.lower(), password=hashed_password,
-                avatar_url = gravatar_url)
+                name = form.username.data.lower(), email=form.email.data.lower(), password=hashed_password)
 
             db.session.add(new_user)
             db.session.commit()
